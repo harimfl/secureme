@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 Schema = mongoose.Schema;
 
-var db_conn = mongoose.connect('mongodb://localhost:27017/secureme');
+var db_conn = mongoose.connect('mongodb://localhost:27017/secureme1');
 
 var requestSchema = new Schema({
     id: { type: String, required: true },

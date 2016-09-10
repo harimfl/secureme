@@ -12,14 +12,12 @@ var Request = require('./user.js').Request;
 var User = require('./user.js').User;
 
 function createRequest(req, res) {
-    res.send(200, "I am awesome");
-    return;
     req.params=_.extend(req.params || {}, req.query || {}, req.body || {});
 
-    var message = (req.message) ?  req.message : "";
-    var type = (req.type) ?  req.type : 0;
-    var gps = (req.gps) ?  req.gps : 0;
-    var userid = (req.userid) ?  req.userid : "";
+    var message = (req.params.message) ?  req.params.message : "";
+    var type = (req.params.type) ?  req.params.type : 0;
+    var gps = (req.params.gps) ?  req.params.gps : 0;
+    var userid = (req.params.userid) ?  req.params.userid : "";
 
     var requestId = Request.createNewRequest(gps, type, message, userid);
     var resp = {
@@ -101,7 +99,8 @@ function getAllRequestForState(req, res) {
                     type: result[i].type,
                     gps: result[i].gps,
                     message: result[i].message,
-                    userid: result[i].userid
+                    userid: result[i].userid,
+                    date: result[i].timecreated
                 };
                 console.log("Calling for ", meta.userid);
                 getUserInfo(meta);

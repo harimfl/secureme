@@ -1,8 +1,12 @@
 package com.hari.secureme;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -18,7 +22,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +34,15 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -68,6 +82,12 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                return false;
+            }
+        });
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -81,6 +101,15 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
             }
         });
 
+        mEmailView.setText(this.getUsername());
+        mEmailView.setNextFocusDownId(R.id.password);
+        mEmailView.setNextFocusForwardId(R.id.password);
+
+        TelephonyManager phoneManager = (TelephonyManager)
+                getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String phoneNumber = phoneManager.getLine1Number();
+        mPasswordView.setText(phoneNumber);
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -91,6 +120,27 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    public String getUsername() {
+        AccountManager manager = AccountManager.get(this);
+        Account[] accounts = manager.getAccountsByType("com.google");
+        List<String> possibleEmails = new LinkedList<String>();
+
+        for (Account account : accounts) {
+            // TODO: Check possibleEmail against an email regex or treat
+            // account.name as an email address only for certain account.type values.
+            possibleEmails.add(account.name);
+        }
+
+        if (!possibleEmails.isEmpty() && possibleEmails.get(0) != null) {
+            String email = possibleEmails.get(0);
+            String[] parts = email.split("@");
+
+            if (parts.length > 1)
+                return parts[0];
+        }
+        return null;
     }
 
     private void populateAutoComplete() {
@@ -186,11 +236,80 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            this.sendRequest();
+            Intent startNewActivity = new Intent(this, MainActivity.class);
+            startActivity(startNewActivity);
+
         }
     }
+
+    private void sendRequest() {
+
+        Thread thread = new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    //Your code goes here
+                    String dataUrl = "http://100.96.243.235:8000/register";
+                    String dataUrlParameters = "name="+mEmailView.getText()+"&phone="+mPasswordView.getText();
+                    URL url;
+                    HttpURLConnection connection = null;
+                    try {
+// Create connection
+                        url = new URL(dataUrl);
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("GET");
+                        connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+                        connection.setRequestProperty("Content-Length","" + Integer.toString(dataUrlParameters.getBytes().length));
+                        connection.setRequestProperty("Content-Language", "en-US");
+                        connection.setUseCaches(false);
+                        connection.setDoInput(true);
+                        connection.setDoOutput(true);
+// Send request
+                        DataOutputStream wr = new DataOutputStream(
+                                connection.getOutputStream());
+                        wr.writeBytes(dataUrlParameters);
+                        wr.flush();
+                        wr.close();
+// Get Response
+                        InputStream is = connection.getInputStream();
+                        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+                        String line;
+                        StringBuffer response = new StringBuffer();
+                        while ((line = rd.readLine()) != null) {
+                            response.append(line);
+                            response.append('\r');
+                        }
+                        rd.close();
+                        String responseStr = response.toString();
+                        Log.d("Server response",responseStr);
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                    } finally {
+
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+    }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.length() > 3;
     }
 
     private boolean isPasswordValid(String password) {

@@ -24,6 +24,7 @@ app.use('/progress', require('./controllers/progress.controller'));
 app.use('/completed', require('./controllers/completed.controller'));
 app.use('/fake', require('./controllers/fake.controller'));
 app.use('/history', require('./controllers/history.controller'));
+app.use('/complete', require('./controllers/complete.controller'));
 
 
 // make '/app' default route

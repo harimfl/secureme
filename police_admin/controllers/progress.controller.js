@@ -41,7 +41,7 @@ router.get('/', function (req, res) {
             test += info.phoneNumber
             test += "</div>"
             test += "<div class=\"cell\">";
-            test += "<a href=\"/complete?requestid=" + requestid + "\">" + Complete + "</a>";
+            test += "<a href=\"/complete?requestid=" + info.requestid + "\">" + "Complete" + "</a>";
             test += "</div>"
             test += "</div>"
             fillhtml += test;

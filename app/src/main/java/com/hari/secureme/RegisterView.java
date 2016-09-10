@@ -7,6 +7,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -120,6 +123,14 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        SharedPreferences settings = getSharedPreferences("com.hari.secureme", Context.MODE_PRIVATE);
+
+        int id = settings.getInt("registered", 0);
+        if (id == 1) {
+            Intent startNewActivity = new Intent(this, MainActivity.class);
+            startActivity(startNewActivity);
+        }
     }
 
     public String getUsername() {
@@ -253,7 +264,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                 try
                 {
                     //Your code goes here
-                    String dataUrl = "http://100.96.243.235:8000/register";
+                    String dataUrl = "http://dev-in-3.aliathegame.com:10000/register";
                     String dataUrlParameters = "name="+mEmailView.getText()+"&phone="+mPasswordView.getText();
                     URL url;
                     HttpURLConnection connection = null;
@@ -286,6 +297,18 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                         rd.close();
                         String responseStr = response.toString();
                         Log.d("Server response",responseStr);
+                        if (!responseStr.isEmpty()) {
+                            JSONObject jObject  = new JSONObject(responseStr);
+                            String userid = jObject.getString("userid"); // get the name from data.
+                            if (!userid.isEmpty()) {
+                                SharedPreferences settings = getSharedPreferences("com.hari.secureme", Context.MODE_PRIVATE);
+
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putInt("registered", 1);
+                                editor.putString("userid", userid);
+                                editor.commit();
+                            }
+                        }
                     } catch (Exception e) {
 
                         e.printStackTrace();

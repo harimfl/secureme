@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
             return res.render('login', { error: 'An error occurred' });
         }
         var resp = "";
-        var aa = filesys.readFileSync(__dirname + '/test.html', 'utf-8');
+        var aa = filesys.readFileSync(__dirname + '/test-1.html', 'utf-8');
         var fillhtml = "";
         for (var i = 0; i < response.body.data.length; i++) {
             var info = response.body.data[i];
@@ -39,6 +39,9 @@ router.get('/', function (req, res) {
             test += "</div>"
             test += "<div class=\"cell\">";
             test += info.phoneNumber
+            test += "</div>"
+            test += "<div class=\"cell\">";
+            test += "<a href=\"/complete?requestid=" + requestid + "\">" + Complete + "</a>";
             test += "</div>"
             test += "</div>"
             fillhtml += test;

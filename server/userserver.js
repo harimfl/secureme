@@ -27,6 +27,18 @@ function createRequest(req, res) {
     res.send(200, JSON.stringify(resp));
 }
 
+function completeRequest(req, res) {
+    req.params=_.extend(req.params || {}, req.query || {}, req.body || {});
+
+    var requestId = req.params.requestid;
+    // var status = req.params.status;
+    Request.getRequest(requestId, function(err, result) {
+        result.status = 1;
+        result.save();
+        res.send(200);
+    });
+}
+
 function getAllUserRequest(req, res) {
     req.params=_.extend(req.params || {}, req.query || {}, req.body || {});
 
@@ -170,6 +182,9 @@ function loadPathListeners() {
 
     _userserver.get('/getAllRequestForState', getAllRequestForState);
     _userserver.post('/getAllRequestForState', getAllRequestForState);
+
+    _userserver.get('/completeRequest', completeRequest);
+    _userserver.post('/completeRequest', completeRequest);
 }
 
 

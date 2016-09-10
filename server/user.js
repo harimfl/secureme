@@ -101,7 +101,7 @@ userSchema.statics.createNewUser = function(phoneNumber, name, userId) {
     return user.id;
 }
 
-var User = mongoose.model('User', userSchema);
+var User = mongoose.model('People', userSchema);
 exports.User = User;
 
 

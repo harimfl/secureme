@@ -3,12 +3,14 @@ var router = express.Router();
 var request = require('request');
 var config = require('config.json');
 var filesys = require('fs');
+var _ = require('underscore');
 
 router.get('/', function (req, res) {
+    req.params=_.extend(req.params || {}, req.query || {}, req.body || {});
     console.log("ashdkahs 1");
-    req.body.state = 2;
+    req.body.requestid = req.params.requestid;
     request.post({
-        url: "http://dev-in-3.aliathegame.com:10000/getAllRequestForState",
+        url: "http://dev-in-3.aliathegame.com:10000/completeRequest",
         form: req.body,
         json: true
     }, function (error, response, body) {
@@ -16,38 +18,7 @@ router.get('/', function (req, res) {
         if (error) {
             return res.render('login', { error: 'An error occurred' });
         }
-        var resp = "";
-        var aa = filesys.readFileSync(__dirname + '/test.html', 'utf-8');
-        var fillhtml = "";
-        for (var i = 0; i < response.body.data.length; i++) {
-            var info = response.body.data[i];
-            var test = "<div class=\"row\">";
-            test += "<div class=\"cell\">";
-            test += info.requestid
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += info.name
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += info.userid
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += info.type
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += new Date(info.date);
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += info.phoneNumber
-            test += "</div>"
-            test += "</div>"
-            fillhtml += test;
-        }
-        aa = aa.replace('%FILL_DATA%', fillhtml);
-        aa = aa.replace('%CLASS_NAME%', "red");
-
-        var viewData = { aa: aa };
-        res.send(aa);
+        res.redirect('/progress');
     });
 });
 
@@ -56,7 +27,7 @@ router.post('/', function (req, res) {
     //
     //
     console.log("ashdkahs");
-    req.body.state = 2;
+    req.body.state = 0;
     request.post({
         url: "http://dev-in-3.aliathegame.com:10000/getAllRequestForState",
         form: req.body,

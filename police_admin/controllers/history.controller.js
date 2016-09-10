@@ -3,6 +3,7 @@ var router = express.Router();
 var request = require('request');
 var config = require('config.json');
 var filesys = require('fs');
+var _ = require('underscore');
 
 router.get('/', function (req, res) {
     req.params=_.extend(req.params || {}, req.query || {}, req.body || {});

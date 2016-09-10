@@ -97,6 +97,32 @@
                     android:onClick="onKidnappClicked" />
             </TableRow>
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp" >
+
+                <Button
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:id="@+id/button7"
+                    android:background="@drawable/trackme"
+                    android:layout_marginRight="10dp"
+                    android:onClick="onTrackMeClicked" />
+
+                <Button
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:text="Robbery"
+                    android:id="@+id/button8"
+                    android:background="@drawable/status"
+                    android:layout_marginLeft="5dp"
+                    android:onClick="onPreviousStatusClicked" />
+            </TableRow>
+
         </TableLayout>
     </ScrollView>
 

@@ -169,51 +169,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEveClicked(View button) {
-            this.sendRequest(0, false);
+            this.sendRequest(1, false);
     }
 
     public void onRobberyClicked(View button) {
-        this.sendRequest(1, false);
-    }
-
-    public void onAccidentClicked(View button) {
-        this.sendRequest(2, false);
-    }
-
-    public void onMurderClicked(View button) {
         this.sendRequest(3, false);
     }
 
-    public void onKidnappClicked(View button) {
+    public void onAccidentClicked(View button) {
         this.sendRequest(4, false);
     }
 
-    public void onEmergencyCallClicked(View button) {
-        this.sendRequest(1, true);
+    public void onMurderClicked(View button) {
+        this.sendRequest(0, false);
+    }
 
-//        SharedPreferences settings = getSharedPreferences("com.hari.secureme", Context.MODE_PRIVATE);
-//        String emergency = settings.getString("emergency", "");
-//
-//        if (emergency.isEmpty()) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityInstance, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
-//            builder.setMessage("No Emergency Contact Found!")
-//                    .setCancelable(false)
-//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int id) {
-//                            //do things
-//                        }
-//                    });
-//            AlertDialog alert = builder.create();
-//            alert.show();
-//            TextView textView = (TextView) alert.findViewById(android.R.id.message);
-//            textView.setTextSize(24);
-//            Button button1 = alert.getButton(Dialog.BUTTON_POSITIVE);
-//            button1.setTextSize(24);
-//        } else {
-//            String url = "tel:"+emergency;
-//            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
-//            startActivity(intent);
-//        }
+    public void onKidnappClicked(View button) {
+        this.sendRequest(5, false);
+    }
+
+    public void onTrackMeClicked(View button) {
+        this.sendRequest(6, false);
+    }
+
+    public void onPreviousStatusClicked(View button) {
+        this.sendRequest(1, true);
+    }
+
+    public void onEmergencyCallClicked(View button) {
+        SharedPreferences settings = getSharedPreferences("com.hari.secureme", Context.MODE_PRIVATE);
+        String emergency = settings.getString("emergency", "");
+
+        if (emergency.isEmpty()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mainActivityInstance, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+            builder.setMessage("No Emergency Contact Found!")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            TextView textView = (TextView) alert.findViewById(android.R.id.message);
+            textView.setTextSize(24);
+            Button button1 = alert.getButton(Dialog.BUTTON_POSITIVE);
+            button1.setTextSize(24);
+        } else {
+            String url = "tel:"+emergency;
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
+            startActivity(intent);
+        }
 
     }
 }

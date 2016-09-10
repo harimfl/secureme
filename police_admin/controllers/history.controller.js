@@ -5,8 +5,9 @@ var config = require('config.json');
 var filesys = require('fs');
 
 router.get('/', function (req, res) {
+    req.params=_.extend(req.params || {}, req.query || {}, req.body || {});
     console.log("ashdkahs 1");
-    req.body.state = 0;
+    req.body.userid = req.params.userid;
     request.post({
         url: "http://dev-in-3.aliathegame.com:10000/getAllUserRequest",
         form: req.body,

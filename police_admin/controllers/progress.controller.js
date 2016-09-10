@@ -35,7 +35,7 @@ router.get('/', function (req, res) {
             test += info.type
             test += "</div>"
             test += "<div class=\"cell\">";
-            test += info.date
+            test += new Date(info.date);
             test += "</div>"
             test += "<div class=\"cell\">";
             test += info.phoneNumber

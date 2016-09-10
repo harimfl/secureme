@@ -6,7 +6,7 @@ var filesys = require('fs');
 
 router.get('/', function (req, res) {
     console.log("ashdkahs 1");
-    req.body.state = 0;
+    req.body.state = 1;
     request.post({
         url: "http://dev-in-3.aliathegame.com:10000/getAllRequestForState",
         form: req.body,
@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
             test += info.name
             test += "</div>"
             test += "<div class=\"cell\">";
-            test += "<a href=\"/history?userid=" + info.userid + "\">" + info.userid + "</a>";
+            test += info.userid
             test += "</div>"
             test += "<div class=\"cell\">";
             test += info.type
@@ -44,8 +44,7 @@ router.get('/', function (req, res) {
             fillhtml += test;
         }
         aa = aa.replace('%FILL_DATA%', fillhtml);
-        aa = aa.replace('%CLASS_NAME%', "blue");
-
+        aa = aa.replace('%CLASS_NAME%', "green");
 
         var viewData = { aa: aa };
         res.send(aa);

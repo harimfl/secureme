@@ -23,6 +23,7 @@ app.use('/api/users', require('./controllers/api/users.controller'));
 app.use('/progress', require('./controllers/progress.controller'));
 app.use('/completed', require('./controllers/completed.controller'));
 app.use('/fake', require('./controllers/fake.controller'));
+app.use('/history', require('./controllers/history.controller'));
 
 
 // make '/app' default route

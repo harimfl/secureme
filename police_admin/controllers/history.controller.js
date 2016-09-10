@@ -8,7 +8,7 @@ router.get('/', function (req, res) {
     console.log("ashdkahs 1");
     req.body.state = 0;
     request.post({
-        url: "http://dev-in-3.aliathegame.com:10000/getAllRequestForState",
+        url: "http://dev-in-3.aliathegame.com:10000/getAllUserRequest",
         form: req.body,
         json: true
     }, function (error, response, body) {
@@ -17,35 +17,30 @@ router.get('/', function (req, res) {
             return res.render('login', { error: 'An error occurred' });
         }
         var resp = "";
-        var aa = filesys.readFileSync(__dirname + '/test.html', 'utf-8');
+        var aa = filesys.readFileSync(__dirname + '/user.html', 'utf-8');
         var fillhtml = "";
-        for (var i = 0; i < response.body.data.length; i++) {
-            var info = response.body.data[i];
+        for (var i = 0; i < response.body.requests.length; i++) {
+            var info = response.body.requests[i];
             var test = "<div class=\"row\">";
             test += "<div class=\"cell\">";
-            test += info.requestid
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += info.name
-            test += "</div>"
-            test += "<div class=\"cell\">";
-            test += "<a href=\"/history?userid=" + info.userid + "\">" + info.userid + "</a>";
+            test += info.id
             test += "</div>"
             test += "<div class=\"cell\">";
             test += info.type
             test += "</div>"
             test += "<div class=\"cell\">";
-            test += info.date
+            test += info.status
             test += "</div>"
             test += "<div class=\"cell\">";
-            test += info.phoneNumber
+            test += info.message
+            test += "</div>"
+            test += "<div class=\"cell\">";
+            test += new Date(info.timestamp);
             test += "</div>"
             test += "</div>"
             fillhtml += test;
         }
         aa = aa.replace('%FILL_DATA%', fillhtml);
-        aa = aa.replace('%CLASS_NAME%', "blue");
-
 
         var viewData = { aa: aa };
         res.send(aa);

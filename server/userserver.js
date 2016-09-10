@@ -47,6 +47,7 @@ function getAllUserRequest(req, res) {
                 meta.status = result[i].status;
                 meta.message = result[i].message;
                 meta.timestamp = result[i].timecreated;
+                meta.id = result[i].id;
                 resp.requests.push(meta);
             }
         }

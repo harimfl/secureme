@@ -71,6 +71,19 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <EditText
+                android:id="@+id/emergencyContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/emergency_phone"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:layout_gravity="right" />
+
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"

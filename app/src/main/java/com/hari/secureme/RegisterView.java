@@ -75,8 +75,10 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mEmergencyContactView;
     private View mProgressView;
     private View mLoginFormView;
+    private String emergencyContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,8 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                 getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNumber = phoneManager.getLine1Number();
         mPasswordView.setText(phoneNumber);
+
+        mEmergencyContactView = (EditText) findViewById(R.id.emergencyContact);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -215,6 +219,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        emergencyContact = mEmergencyContactView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -223,6 +228,12 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
+            cancel = true;
+        }
+
+        if (!emergencyContact.isEmpty() && !TextUtils.isEmpty(emergencyContact) && !isPasswordValid(emergencyContact)) {
+            mEmergencyContactView.setError(getString(R.string.error_invalid_password));
+            focusView = mEmergencyContactView;
             cancel = true;
         }
 
@@ -306,6 +317,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                                 SharedPreferences.Editor editor = settings.edit();
                                 editor.putInt("registered", 1);
                                 editor.putString("userid", userid);
+                                editor.putString("emergency", emergencyContact);
                                 editor.commit();
                             }
                         }

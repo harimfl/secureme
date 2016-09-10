@@ -1,1 +1,58 @@
-﻿<h1>Hi {{vm.user.firstName}}!!</h1>
+﻿<html>
+   <head>
+      <style type="text/css">
+         .left-column
+		{
+		position:absolute;
+		text-align: center; 
+		left:10%;
+		width: 9cm;
+        height: 5cm;
+		background-color:aqua;
+		margin-top:50px
+		}
+		.right-column
+		{
+		position:absolute;  
+		text-align: center;
+		left:70%;
+		width: 9cm;
+        height: 5cm;
+		background-color:orangered;
+		margin-top:50px
+		}
+		.center-column
+		{
+		position:absolute;
+		text-align: center;
+		left:40%;
+		width: 9cm;
+        height: 5cm;
+		background-color:limegreen;
+		margin-top:50px
+		}
+      </style>
+   </head>
+   <body bgcolor="#E6E6FA">
+	  <div id="container">
+	  	<section class="left-column">
+	  		<h3>Request in progress</h3>
+	  		<br>
+	  		<h5>This card is a place holder for all complaints in progress</h5>
+	  		<a href="/progress">Progress Box</a>
+	  	</section>
+		<section class="right-column">
+			<h3>Fake requests</h3>
+			<br>
+			<h5>This card is a place holder for all complaints which are fake</h5>
+			<a href="/fake">Fake Box</a>
+		</section>
+		<section class="center-column">
+			<h3>Completed requests</h3>
+			<br>
+			<h5>This card is a place holder for all complaints completed</h5>
+			<a  href="/completed">Completed</a>
+		</section>
+	  </div>
+   </body>
+</html>

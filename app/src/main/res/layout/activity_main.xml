@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.hari.secureme.MainActivity"
-    android:background="#212121">
+    android:background="#FFFFFF">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         android:visibility="invisible" />
 
     <ScrollView
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/scrollView"
         android:layout_alignParentStart="true">>
@@ -29,9 +29,11 @@
             android:layout_height="match_parent"
             android:stretchColumns="2"
             android:showDividers="beginning|middle|end">
-            <TableRow android:layout_margin="5dp">
+            <TableRow android:layout_marginLeft="-10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
             <Button
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:id="@+id/button"
                 android:layout_marginRight="10dp"
@@ -42,19 +44,18 @@
                 android:layout_width="120dp"
                 android:layout_height="150dp"
                 android:id="@+id/button2"
-                android:background="@drawable/tease"
-                android:layout_marginLeft="5dp"
+                android:background="@drawable/rape"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
-                android:onClick="onEveClicked" />
+                android:onClick="onRapeClicked" />
             </TableRow>
             <TableRow android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_marginLeft="-10dp"
+                android:layout_marginRight="0dp">
             <Button
                 android:layout_width="160dp"
                 android:layout_height="160dp"
-                android:text="Murder"
                 android:id="@+id/button3"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/robbery"
@@ -66,7 +67,7 @@
                 android:layout_height="160dp"
                     android:id="@+id/button4"
                 android:background="@drawable/accident"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
                 android:onClick="onAccidentClicked" />
             </TableRow>
@@ -74,9 +75,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp">
 
                 <Button
@@ -88,27 +88,26 @@
                     android:onClick="onEmergencyCallClicked" />
 
                 <Button
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
-                    android:text="Robbery"
-                    android:id="@+id/button6"
-                    android:background="@drawable/kidnap"
-                    android:layout_marginLeft="5dp"
-                    android:onClick="onKidnappClicked" />
+                    android:layout_width="120dp"
+                    android:layout_height="150dp"
+                    android:id="@+id/button13"
+                    android:background="@drawable/tease"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:onClick="onEveClicked" />
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp" >
 
                 <Button
                     android:layout_width="160dp"
                     android:layout_height="160dp"
-                    android:id="@+id/button7"
+                    android:id="@+id/button6"
                     android:background="@drawable/trackme"
                     android:layout_marginRight="10dp"
                     android:onClick="onTrackMeClicked" />
@@ -116,11 +115,29 @@
                 <Button
                     android:layout_width="160dp"
                     android:layout_height="160dp"
-                    android:text="Robbery"
                     android:id="@+id/button8"
+                    android:background="@drawable/kidnap"
+                    android:layout_marginLeft="10dp"
+                    android:onClick="onKidnappClicked"
+                    android:layout_marginRight="5dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="-10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" >
+
+                <Button
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:id="@+id/button10"
                     android:background="@drawable/status"
-                    android:layout_marginLeft="5dp"
-                    android:onClick="onPreviousStatusClicked" />
+                    android:layout_marginLeft="10dp"
+                    android:onClick="onPreviousStatusClicked"
+                    android:layout_marginRight="5dp" />
             </TableRow>
 
         </TableLayout>

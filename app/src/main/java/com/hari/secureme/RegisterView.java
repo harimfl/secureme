@@ -48,7 +48,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.GET_ACCOUNTS;
+import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_PHONE_STATE;
 
 /**
  * A login screen that offers login via email/password.
@@ -73,29 +78,30 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private AutoCompleteTextView mUserName;
+    private EditText mPhoneNumber;
     private EditText mEmergencyContactView;
     private View mProgressView;
     private View mLoginFormView;
     private String emergencyContact;
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_view);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mUserName = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-        mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mUserName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 return false;
             }
         });
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPhoneNumber = (EditText) findViewById(R.id.password);
+        mPhoneNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -106,14 +112,18 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
             }
         });
 
-        mEmailView.setText(this.getUsername());
-        mEmailView.setNextFocusDownId(R.id.password);
-        mEmailView.setNextFocusForwardId(R.id.password);
+        mUserName.setText(this.getUsername());
+        mUserName.setNextFocusDownId(R.id.password);
+        mUserName.setNextFocusForwardId(R.id.password);
 
-        TelephonyManager phoneManager = (TelephonyManager)
-                getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String phoneNumber = phoneManager.getLine1Number();
-        mPasswordView.setText(phoneNumber);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                TelephonyManager phoneManager = (TelephonyManager)
+                        getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                String phoneNumber = phoneManager.getLine1Number();
+                mPhoneNumber.setText(phoneNumber);
+            }
+        }
 
         mEmergencyContactView = (EditText) findViewById(R.id.emergencyContact);
 
@@ -170,21 +180,22 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mUserName, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                            requestPermissions(new String[]{READ_CONTACTS, READ_PHONE_STATE, CALL_PHONE, GET_ACCOUNTS, INTERNET, ACCESS_FINE_LOCATION}, REQUEST_READ_CONTACTS);
                         }
                     });
         } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+            requestPermissions(new String[]{READ_CONTACTS, READ_PHONE_STATE, CALL_PHONE, GET_ACCOUNTS, INTERNET, ACCESS_FINE_LOCATION}, REQUEST_READ_CONTACTS);
         }
+
         return false;
     }
 
@@ -194,7 +205,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
+        if (requestCode == REQUEST_READ_CONTACTS || requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
             }
@@ -213,12 +224,12 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        mUserName.setError(null);
+        mPhoneNumber.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = mUserName.getText().toString();
+        String password = mPhoneNumber.getText().toString();
         emergencyContact = mEmergencyContactView.getText().toString();
 
         boolean cancel = false;
@@ -226,8 +237,8 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            mPhoneNumber.setError(getString(R.string.error_invalid_password));
+            focusView = mPhoneNumber;
             cancel = true;
         }
 
@@ -239,12 +250,12 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            mUserName.setError(getString(R.string.error_field_required));
+            focusView = mUserName;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            mUserName.setError(getString(R.string.error_invalid_email));
+            focusView = mUserName;
             cancel = true;
         }
 
@@ -276,7 +287,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                 {
                     //Your code goes here
                     String dataUrl = "http://dev-in-3.aliathegame.com:10000/register";
-                    String dataUrlParameters = "name="+mEmailView.getText()+"&phone="+mPasswordView.getText();
+                    String dataUrlParameters = "name="+ mUserName.getText()+"&phone="+ mPhoneNumber.getText();
                     URL url;
                     HttpURLConnection connection = null;
                     try {
@@ -439,7 +450,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                 new ArrayAdapter<>(RegisterView.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mUserName.setAdapter(adapter);
     }
 
     /**
@@ -487,8 +498,8 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mPhoneNumber.setError(getString(R.string.error_incorrect_password));
+                mPhoneNumber.requestFocus();
             }
         }
 

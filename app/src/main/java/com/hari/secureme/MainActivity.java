@@ -213,7 +213,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onTrackMeClicked(View button) {
         this.sendRequest(6, false);
+    }
 
+    public void onRecordClicked(View button) {
         if(mRecorder == null) {
             startRecording();
         } else {

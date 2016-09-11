@@ -54,6 +54,7 @@ import static android.Manifest.permission.GET_ACCOUNTS;
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.RECORD_AUDIO;
 
 /**
  * A login screen that offers login via email/password.
@@ -180,7 +181,7 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
@@ -189,11 +190,11 @@ public class RegisterView extends AppCompatActivity implements LoaderCallbacks<C
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS, READ_PHONE_STATE, CALL_PHONE, GET_ACCOUNTS, INTERNET, ACCESS_FINE_LOCATION}, REQUEST_READ_CONTACTS);
+                            requestPermissions(new String[]{RECORD_AUDIO, READ_CONTACTS, READ_PHONE_STATE, CALL_PHONE, GET_ACCOUNTS, INTERNET, ACCESS_FINE_LOCATION}, REQUEST_READ_CONTACTS);
                         }
                     });
         } else {
-            requestPermissions(new String[]{READ_CONTACTS, READ_PHONE_STATE, CALL_PHONE, GET_ACCOUNTS, INTERNET, ACCESS_FINE_LOCATION}, REQUEST_READ_CONTACTS);
+            requestPermissions(new String[]{RECORD_AUDIO, READ_CONTACTS, READ_PHONE_STATE, CALL_PHONE, GET_ACCOUNTS, INTERNET, ACCESS_FINE_LOCATION}, REQUEST_READ_CONTACTS);
         }
 
         return false;
